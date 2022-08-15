@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    public WorldBorder worldBorder;
     public Bullet bulletPreFab;
     public float thrustScaler = 4.0f;
     public float recoil = -1.5f;
@@ -15,12 +16,24 @@ public class Player : MonoBehaviour
     void Awake()
     {
         this.rigidBody = GetComponent<Rigidbody2D>();
+        GetComponent<AudioSource>().loop = true;
     }
 
     // Update is called once per frame
     void Update()
     {
-        this.isThrusting = (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow));
+        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
+        {
+            if (!isThrusting)
+            {
+                GetComponent<AudioSource>().Play();
+            }
+            this.isThrusting = true;
+        } else
+        {
+            this.isThrusting = false;
+            GetComponent<AudioSource>().Stop();
+        }
         if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
         {
             this.turnDirection = 1.0f;
@@ -41,6 +54,7 @@ public class Player : MonoBehaviour
 
     void FixedUpdate()
     {
+
         if (this.isThrusting)
         {
             this.rigidBody.AddForce(this.transform.up * this.thrustScaler);            
@@ -54,11 +68,16 @@ public class Player : MonoBehaviour
         {
             this.rigidBody.angularVelocity = 0;
         }
+        if (worldBorder.IsOutOfBounds(this.transform.position))
+        {
+            this.transform.position = worldBorder.CalculateWrappedPosition(this.transform.position);
+        }
     }
 
     private void Shoot()
     {
         Bullet bullet = Instantiate(this.bulletPreFab, this.transform.position, this.transform.rotation);
+        bullet.worldBorder = worldBorder;
         bullet.Project(this.transform.up);
         this.rigidBody.AddForce(this.transform.up * this.recoil);
     }
