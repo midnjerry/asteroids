@@ -5,8 +5,8 @@ using UnityEngine;
 public class Bullet : MonoBehaviour
 {
     public WorldBorder worldBorder;
-    public float speed = 500.0f;
-    public float lifetimeAfterTeleport = 2f;
+    private float speed = 500.0f;
+    private float maxLifetime = .25f;
     private Rigidbody2D rigidBody;
     private void Awake()
     {
@@ -17,14 +17,18 @@ public class Bullet : MonoBehaviour
     {
         if (worldBorder.IsOutOfBounds(this.transform.position))
         {
-            this.transform.position = worldBorder.CalculateWrappedPosition(this.transform.position);   
+            this.transform.position = worldBorder.CalculateWrappedPosition(this.transform.position);
+            Destroy(this.gameObject, this.maxLifetime);
         }
     }
 
     public void Project(Vector2 direction)
     {
         rigidBody.AddForce(direction * speed);
-        Destroy(this.gameObject, this.lifetimeAfterTeleport);
     }
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        Destroy(this.gameObject);
+    }
 }

@@ -49,4 +49,11 @@ public class WorldBorder : MonoBehaviour
         float y = position.y * (isOutsideY ? -1 : 1);
         return new Vector2(x, y);
     }
+
+    public Vector2 getSize()
+    {
+        return boxCollider.size;
+    }
+
+
 }
