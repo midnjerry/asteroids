@@ -1,16 +1,17 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class Asteroid : MonoBehaviour
 {
+    public const float LARGE = 2.0f;
+    public const float MEDIUM = 1.0f;
+    public const float SMALL = .5f;
     public delegate void AsteroidDestructionEvent(Asteroid asteroid);
     public static event AsteroidDestructionEvent OnDestroyed;
     private SpriteRenderer spriteRenderer;
     private Rigidbody2D rigidBody;
     public WorldBorder worldBorder;
     private float size;
+
 
     private void Awake()
     {

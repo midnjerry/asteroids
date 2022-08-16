@@ -4,17 +4,19 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    public delegate void LevelStartEvent(int level);
+    public static event LevelStartEvent OnLevelStart;
+    public delegate void LevelEndEvent(int level);
+    public static event LevelEndEvent OnLevelEnd;
+
     public WorldBorder worldBorder;
     public Asteroid asteroidPreFab;
-    const float LARGE = 2.0f;
-    const float MEDIUM = 1.0f;
-    const float SMALL = .5f;
     private HashSet<Asteroid> asteroidSet = new HashSet<Asteroid>();
     int level;
-    // Start is called before the first frame update
+
     void Awake()
     {
-        level = 1;
+        level = 0;
     }
 
     private void Start()
@@ -43,14 +45,14 @@ public class GameManager : MonoBehaviour
     private void OnAsteroidDestruction(Asteroid asteroid)
     {
         asteroidSet.Remove(asteroid);
-        if (asteroid.getSize() == LARGE)
+        if (asteroid.getSize() == Asteroid.LARGE)
         {
-            Spawn(MEDIUM, asteroid.transform.position);
-            Spawn(MEDIUM, asteroid.transform.position);
-        } else if (asteroid.getSize() == MEDIUM)
+            Spawn(Asteroid.MEDIUM, asteroid.transform.position);
+            Spawn(Asteroid.MEDIUM, asteroid.transform.position);
+        } else if (asteroid.getSize() == Asteroid.MEDIUM)
         {
-            Spawn(SMALL, asteroid.transform.position);
-            Spawn(SMALL, asteroid.transform.position);
+            Spawn(Asteroid.SMALL, asteroid.transform.position);
+            Spawn(Asteroid.SMALL, asteroid.transform.position);
         }
     }
    
@@ -58,13 +60,23 @@ public class GameManager : MonoBehaviour
     {
         if (asteroidSet.Count == 0)
         {
+            if (level >= 1)
+            {
+                OnLevelEnd?.Invoke(level);
+            }
             level++;
             int count = getAsteroidCount();
             for (int i = 0; i < count; i++)
             {
-                Spawn(LARGE);
+                Spawn(Asteroid.LARGE);
             }
+            OnLevelStart?.Invoke(level);
         }
+    }
+
+    private void OnDestroy()
+    {
+        Asteroid.OnDestroyed -= OnAsteroidDestruction;
     }
 
     private int getAsteroidCount()
