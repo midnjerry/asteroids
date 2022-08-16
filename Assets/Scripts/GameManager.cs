@@ -11,7 +11,9 @@ public class GameManager : MonoBehaviour
 
     public WorldBorder worldBorder;
     public Asteroid asteroidPreFab;
+    public BigSaucer bigSaucerPreFab;
     private HashSet<Asteroid> asteroidSet = new HashSet<Asteroid>();
+    private BigSaucer activeBigSaucer;
     int level;
 
     void Awake()
@@ -22,6 +24,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         Asteroid.OnDestroyed += OnAsteroidDestruction;
+        BigSaucer.OnDestroyed += OnBigSaucerDestruction;
     }
 
     void Spawn(float size)
@@ -49,10 +52,28 @@ public class GameManager : MonoBehaviour
         {
             Spawn(Asteroid.MEDIUM, asteroid.transform.position);
             Spawn(Asteroid.MEDIUM, asteroid.transform.position);
+            AttemptBigSaucerSpawn();
         } else if (asteroid.getSize() == Asteroid.MEDIUM)
         {
             Spawn(Asteroid.SMALL, asteroid.transform.position);
             Spawn(Asteroid.SMALL, asteroid.transform.position);
+            AttemptBigSaucerSpawn();
+        }
+    }
+
+    private void OnBigSaucerDestruction(BigSaucer saucer)
+    {
+        activeBigSaucer = null;
+    }
+
+    void AttemptBigSaucerSpawn()
+    {
+        if (activeBigSaucer == null)
+        {
+            float x = Random.Range(0f, worldBorder.getSize().x) - worldBorder.getSize().x / 2;
+            float y = Random.Range(0f, worldBorder.getSize().y) - worldBorder.getSize().y / 2;
+            activeBigSaucer = Instantiate(bigSaucerPreFab, new Vector2(x, y), Quaternion.Euler(0, 0, 0));
+            activeBigSaucer.worldBorder = worldBorder;
         }
     }
    

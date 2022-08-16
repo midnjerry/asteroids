@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class SoundManager : MonoBehaviour
@@ -8,7 +9,7 @@ public class SoundManager : MonoBehaviour
     public AudioClip beat1;
     public AudioClip beat2;
     public float HeartBeatRateAtStart = .75f;
-    public float HeartBeatRateAtEnd = .2f;
+    public float HeartBeatRateAtEnd = .25f;
     private AudioSource audioSource;
     private bool isPlaying = true;
     private float heartbeatSpeed;
@@ -24,10 +25,17 @@ public class SoundManager : MonoBehaviour
         Asteroid.OnDestroyed += OnAsteroidDestruction;
         GameManager.OnLevelStart += OnLevelStart;
         GameManager.OnLevelEnd += OnLevelEnd;
+        BigSaucer.OnDestroyed += OnBigSaucerDestroyed;
+    }
+
+    private void OnBigSaucerDestroyed(BigSaucer saucer)
+    {
+        audioSource.PlayOneShot(largeExplosion);
     }
 
     private void OnDestroy()
     {
+        BigSaucer.OnDestroyed -= OnBigSaucerDestroyed;
         Asteroid.OnDestroyed -= OnAsteroidDestruction;
         GameManager.OnLevelStart -= OnLevelStart;
         GameManager.OnLevelEnd -= OnLevelEnd;
