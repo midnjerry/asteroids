@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour
     private HashSet<Asteroid> asteroidSet = new HashSet<Asteroid>();
     private BigSaucer activeBigSaucer;
     int level;
+    int saucerCount;
 
     void Awake()
     {
@@ -70,10 +71,17 @@ public class GameManager : MonoBehaviour
     {
         if (activeBigSaucer == null)
         {
-            float x = Random.Range(0f, worldBorder.getSize().x) - worldBorder.getSize().x / 2;
+            saucerCount++;
+            bool leftSide = Random.Range(0, 2) == 0;
+            float x = leftSide ? -worldBorder.getSize().x / 2 : worldBorder.getSize().x / 2;
             float y = Random.Range(0f, worldBorder.getSize().y) - worldBorder.getSize().y / 2;
             activeBigSaucer = Instantiate(bigSaucerPreFab, new Vector2(x, y), Quaternion.Euler(0, 0, 0));
             activeBigSaucer.worldBorder = worldBorder;
+            activeBigSaucer.setAsteroids(asteroidSet);
+            if (level > 1 && saucerCount % 3 == 0)
+            {
+                activeBigSaucer.setSmall();
+            }
         }
     }
    

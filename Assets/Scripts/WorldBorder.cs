@@ -37,8 +37,17 @@ public class WorldBorder : MonoBehaviour
 
     public bool IsOutOfBounds(Vector3 position)
     {
-        return Mathf.Abs(position.x) > boxCollider.bounds.max.x ||
-            Mathf.Abs(position.y) > boxCollider.bounds.max.y;
+        return IsOutsideXBounds(position) || IsOutsideYBounds(position);
+    }
+
+    public bool IsOutsideXBounds(Vector3 position)
+    {
+        return Mathf.Abs(position.x) > boxCollider.bounds.max.x;
+    }
+
+    public bool IsOutsideYBounds(Vector3 position)
+    {
+        return Mathf.Abs(position.y) > boxCollider.bounds.max.y;
     }
 
     public Vector2 CalculateWrappedPosition(Vector2 position)
