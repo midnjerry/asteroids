@@ -12,13 +12,18 @@
 
 
 <polygon points="76	168	132	176	148	192	100	216	52	192	68	176	124	168	100	264	76	168" stroke="black" fill="transparent" stroke-width="3"/>
-<polygon points="179	166	234	179	249	197	198	216	153	187	171	173	227	171	194	264	179	166" stroke="black" fill="transparent" stroke-width="3"/>
-<polygon points="283	164	336	183	349	202	297	216	254	183	273	170	330	173	288	263	283	164" stroke="black" fill="transparent" stroke-width="3"/>
-<polygon points="386	162	438	186	448	206	395	215	356	178	376	168	432	176	381	261	386	162" stroke="black" fill="transparent" stroke-width="3"/>
-<polygon points="490	161	539	190	547	211	494	215	459	174	480	166	534	180	476	259	490	161" stroke="black" fill="transparent" stroke-width="3"/>
-<polygon points="594	160	640	194	646	216	582	214	561	170	583	164	636	183	570	256	594	160" stroke="black" fill="transparent" stroke-width="3"/>
-<polygon points="698	160	740	198	744	220	691	213	665	167	687	162	738	187	664	253	698	160" stroke="black" fill="transparent" stroke-width="3"/>
-<polygon points="802	160	840	202	842	224	790	212	768	163	790	161	839	190	759	249	802	160" stroke="black" fill="transparent" stroke-width="3"/>
-<polygon points="906	160	940	206	940	228	889	211	872	160	894	160	940	194	855	245	906	160" stroke="black" fill="transparent" stroke-width="3"/>
+<polygon points="179 166	234	179	249	197	198	216	153	187	171	173	227	171	194	264	179	166" stroke="black" fill="transparent" stroke-width="3"/>
+<polygon points="283 164	336	183	349	202	297	216	254	183	273	170	330	173	288	263	283	164" stroke="black" fill="transparent" stroke-width="3"/>
+<polygon points="386 162	438	186	448	206	395	215	356	178	376	168	432	176	381	261	386	162" stroke="black" fill="transparent" stroke-width="3"/>
+<polygon points="490 161	539	190	547	211	494	215	459	174	480	166	534	180	476	259	490	161" stroke="black" fill="transparent" stroke-width="3"/>
+<polygon points="594 160	640	194	646	216	582	214	561	170	583	164	636	183	570	256	594	160" stroke="black" fill="transparent" stroke-width="3"/>
+<polygon points="698 160	740	198	744	220	691	213	665	167	687	162	738	187	664	253	698	160" stroke="black" fill="transparent" stroke-width="3"/>
+<polygon points="802 160	840	202	842	224	790	212	768	163	790	161	839	190	759	249	802	160" stroke="black" fill="transparent" stroke-width="3"/>
+<polygon points="906 160	940	206	940	228	889	211	872	160	894	160	940	194	855	245	906	160" stroke="black" fill="transparent" stroke-width="3"/>
+
+<polygon points="70	400	100	450	130	400	100	415	70	400" stroke="black" fill="transparent" stroke-width="3"/>
+<polygon points="170	400	200	450	230	400	200	415	170	400	200	350	230	400	200	385" stroke="black" fill="transparent" stroke-width="3"/>
+<polygon points="308	460	330	489	328	468	348	453	308	460	329	421	331	444	348	453	349	475	330	489	368	483	348	453" stroke="black" fill="transparent" stroke-width="3"/>
+
 
 </svg>

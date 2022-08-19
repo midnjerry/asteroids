@@ -243,6 +243,7 @@ MonoBehaviour:
   worldBorder: {fileID: 510375861}
   asteroidPreFab: {fileID: -8966084960957002958, guid: 4057792cb55917a498c479ef9f9bac2e, type: 3}
   bigSaucerPreFab: {fileID: -7958773623706202108, guid: b484cc0e7e2d6824eb338cda71a73a2c, type: 3}
+  cubeHunterFab: {fileID: -6660062244043458898, guid: 0ff994318000fc64d9e47f85d10ddd56, type: 3}
 --- !u!4 &1486831518
 Transform:
   m_ObjectHideFlags: 0

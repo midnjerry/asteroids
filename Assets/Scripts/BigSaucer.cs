@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class BigSaucer : MonoBehaviour
@@ -78,8 +79,14 @@ public class BigSaucer : MonoBehaviour
         bullet.worldBorder = worldBorder;
         int x = this.transform.position.x < 0 ? 1 : -1;
         int y = UnityEngine.Random.Range(-1, 1);
-
         Vector2 direction = new Vector2(x, y);
+
+        if (asteroids.Count > 0)
+        {
+            Asteroid target = asteroids.ToList()[Random.Range(0, asteroids.Count)];
+            direction = (target.transform.position - this.transform.position).normalized;
+        }
+
         bullet.Project(direction);
         
     }
