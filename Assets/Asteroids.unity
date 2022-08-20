@@ -244,6 +244,8 @@ MonoBehaviour:
   asteroidPreFab: {fileID: -8966084960957002958, guid: 4057792cb55917a498c479ef9f9bac2e, type: 3}
   bigSaucerPreFab: {fileID: -7958773623706202108, guid: b484cc0e7e2d6824eb338cda71a73a2c, type: 3}
   cubeHunterFab: {fileID: -6660062244043458898, guid: 0ff994318000fc64d9e47f85d10ddd56, type: 3}
+  diamondHunterPreFab: {fileID: -4349398707339666422, guid: 592b0d86fb294d54e833a073f86d6b01, type: 3}
+  hunterPreFab: {fileID: 4449337436282963754, guid: ae11a83a101b6844a9ae2399b0813298, type: 3}
 --- !u!4 &1486831518
 Transform:
   m_ObjectHideFlags: 0
@@ -519,7 +521,7 @@ GameObject:
   - component: {fileID: 1890988260}
   m_Layer: 3
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

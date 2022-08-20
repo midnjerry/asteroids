@@ -31,9 +31,7 @@ public class CubeHunter : MonoBehaviour
 
     private void Start()
     {
-        this.transform.eulerAngles = new Vector3(0, 0, Random.value * 360.0f);
-        
-        float randomSpeed = Random.Range(100, 200);
-        rigidBody.AddForce(this.transform.up * randomSpeed);
+        var direction = Random.insideUnitCircle.normalized;
+        rigidBody.AddForce( direction * 100);
     }
 }

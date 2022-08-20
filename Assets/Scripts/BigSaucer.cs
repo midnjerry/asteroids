@@ -107,7 +107,6 @@ public class BigSaucer : MonoBehaviour
         lastShotTime = Time.time;
         int x = this.transform.position.x < 0 ? 1 : -1;
         int y = UnityEngine.Random.Range(-1, 2);
-        Debug.Log("START: x = " + x + " y = " + y);
 
         Vector2 direction = new Vector2(x, y);
         //rigidBody.AddForce(direction * 100);
