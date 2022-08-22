@@ -72,8 +72,8 @@ public class GameManager : MonoBehaviour
         float width = worldBorder.getSize().x;
         float height = worldBorder.getSize().y;
         float randomNeg = Random.Range(0, 2) == 0 ? -1 : 1;
-        float x = Random.Range(width * .8f, width) / 2 * randomNeg;
-        float y = Random.Range(height * .8f, height) / 2 * randomNeg;
+        float x = Random.Range(0, width) / 2 * randomNeg;
+        float y = Random.Range(0, height) / 2 * randomNeg;
         SpawnAsteroid(size, new Vector2(x, y));
     }
 

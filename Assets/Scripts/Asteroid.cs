@@ -7,7 +7,6 @@ public class Asteroid : MonoBehaviour
     public const float SMALL = .5f;
     public delegate void AsteroidDestructionEvent(Asteroid asteroid);
     public static event AsteroidDestructionEvent OnDestroyed;
-    private SpriteRenderer spriteRenderer;
     private Rigidbody2D rigidBody;
     public WorldBorder worldBorder;
     private float size;
@@ -15,7 +14,6 @@ public class Asteroid : MonoBehaviour
 
     private void Awake()
     {
-        spriteRenderer = GetComponent<SpriteRenderer>();
         rigidBody = GetComponent<Rigidbody2D>();
     }
 
@@ -48,8 +46,8 @@ public class Asteroid : MonoBehaviour
     {
         this.transform.eulerAngles = new Vector3(0, 0, Random.value * 360.0f);
         rigidBody.angularVelocity = Random.Range(0, 360) - 180;
-        float randomSpeed = Random.Range(100, 200);
-        rigidBody.AddForce(this.transform.up * rigidBody.angularVelocity);
+        float randomSpeed = Random.Range(50, 200);
+        rigidBody.AddForce(this.transform.up * randomSpeed);
     }
 }
 
