@@ -5,6 +5,7 @@ This is a port of the Asteroids Deluxe arcade game using Unity 2D engine.  Great
 * Sounds
 * Scoring
 * Player Control
+* Animations
 * Enemy Ship Movement
 * UI
 
