@@ -105,7 +105,6 @@ public class GameManager : MonoBehaviour
     private void OnHunterDestruction(Hunter hunter)
     {
         hunterSet.Remove(hunter.gameObject);
-        Debug.Log("Count: " + hunterSet.Count);
     }
 
     void SpawnHunter(float x, float y, Quaternion rotation, GameObject target)
