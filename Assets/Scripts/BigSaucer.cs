@@ -11,7 +11,7 @@ public class BigSaucer : MonoBehaviour
     private Rigidbody2D rigidBody;
     public WorldBorder worldBorder;
     public EnemyBullet enemyBulletPreFab;
-    private HashSet<Asteroid> asteroids;
+    private HashSet<GameObject> targets;
     private float lastShotTime;
     private float lastTurnTime;
     public float firingRate = 1f;
@@ -29,9 +29,9 @@ public class BigSaucer : MonoBehaviour
         Destroy(this.gameObject);
     }
 
-    public void setAsteroids(HashSet<Asteroid> asteroids)
+    public void setTargets(HashSet<GameObject> targets)
     {
-        this.asteroids = asteroids;
+        this.targets = targets;
     }
 
     void FixedUpdate()
@@ -81,9 +81,9 @@ public class BigSaucer : MonoBehaviour
         int y = UnityEngine.Random.Range(-1, 1);
         Vector2 direction = new Vector2(x, y);
 
-        if (asteroids.Count > 0)
+        if (targets.Count > 0)
         {
-            Asteroid target = asteroids.ToList()[Random.Range(0, asteroids.Count)];
+            GameObject target = targets.ToList()[Random.Range(0, targets.Count)];
             direction = (target.transform.position - this.transform.position).normalized;
         }
 

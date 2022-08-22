@@ -4,6 +4,8 @@ using UnityEngine;
 [RequireComponent(typeof(Collider2D))]
 public class Hunter : MonoBehaviour
 {
+    public delegate void HunterDestructionEvent(Hunter hunter);
+    public static event HunterDestructionEvent OnDestroyed;
     private Rigidbody2D rigidBody;
     private float speed = 3f;
     private float rotateSpeed = 100;
@@ -23,6 +25,7 @@ public class Hunter : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        OnDestroyed?.Invoke(this);
         Destroy(this.gameObject);
     }
 

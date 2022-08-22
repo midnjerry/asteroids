@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
     public CubeHunter cubeHunterFab;
     public DiamondHunter diamondHunterPreFab;
     public Hunter hunterPreFab;
-    private HashSet<Asteroid> asteroidSet = new HashSet<Asteroid>();
+    private HashSet<GameObject> asteroidSet = new HashSet<GameObject>();
     private HashSet<GameObject> hunterSet = new HashSet<GameObject>();
     private BigSaucer activeSaucer;
     int level;
@@ -36,6 +36,7 @@ public class GameManager : MonoBehaviour
         BigSaucer.OnDestroyed += OnBigSaucerDestruction;
         CubeHunter.OnDestroyed += OnCubeHunterDestruction;
         DiamondHunter.OnDestroyed += OnDiamondHunterDestruction;
+        Hunter.OnDestroyed += OnHunterDestruction;
     }
 
     void SpawnAsteroid(float size)
@@ -55,12 +56,12 @@ public class GameManager : MonoBehaviour
         Asteroid asteroid = Instantiate(asteroidPreFab, spawnPoint, rotation);
         asteroid.ScaleSize(size);
         asteroid.worldBorder = worldBorder;
-        asteroidSet.Add(asteroid);
+        asteroidSet.Add(asteroid.gameObject);
     }
 
     private void OnAsteroidDestruction(Asteroid asteroid)
     {
-        asteroidSet.Remove(asteroid);
+        asteroidSet.Remove(asteroid.gameObject);
         if (asteroid.getSize() == Asteroid.LARGE)
         {
             SpawnAsteroid(Asteroid.MEDIUM, asteroid.transform.position);
@@ -79,17 +80,20 @@ public class GameManager : MonoBehaviour
 
     private void OnCubeHunterDestruction(CubeHunter cubeHunter)
     {
+        asteroidSet.Remove(cubeHunter.gameObject);
+        hunterSet.Remove(cubeHunter.gameObject);
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         float x = cubeHunter.transform.position.x;
         float y = cubeHunter.transform.position.y;
 
         SpawnDiamondHunter(x+.415f, y, -3, player);
         SpawnDiamondHunter(x+.05f, y+.3f, 125, player);
-        SpawnDiamondHunter(x-.05f, y-.3f, -130, player);
+        SpawnDiamondHunter(x-.05f, y-.3f, -130, player);        
     }
 
     private void OnDiamondHunterDestruction(DiamondHunter diamondHunter)
     {
+        hunterSet.Remove(diamondHunter.gameObject);
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         var top = diamondHunter.transform.position + (diamondHunter.transform.up * .3f);
         var bottom = diamondHunter.transform.position - (diamondHunter.transform.up * .3f);
@@ -97,12 +101,20 @@ public class GameManager : MonoBehaviour
         SpawnHunter(top.x, top.y, diamondHunter.transform.rotation, player);
         SpawnHunter(bottom.x, bottom.y, bottomRotation, player);
     }
+
+    private void OnHunterDestruction(Hunter hunter)
+    {
+        hunterSet.Remove(hunter.gameObject);
+        Debug.Log("Count: " + hunterSet.Count);
+    }
+
     void SpawnHunter(float x, float y, Quaternion rotation, GameObject target)
     {
         var spawnPoint = new Vector2(x, y);
         Hunter hunter = Instantiate(hunterPreFab, spawnPoint, rotation);
         hunter.worldBorder = worldBorder;
         hunter.setTarget(target);
+        hunterSet.Add(hunter.gameObject);
     }
 
     void SpawnDiamondHunter(float x, float y, float angle, GameObject target)
@@ -112,17 +124,23 @@ public class GameManager : MonoBehaviour
         DiamondHunter diamondHunter = Instantiate(diamondHunterPreFab, spawnPoint, rotation);
         diamondHunter.worldBorder = worldBorder;
         diamondHunter.setTarget(target);
+        hunterSet.Add(diamondHunter.gameObject);
     }
 
-    void SpawnCubeHunter()
+    void AttemptCubeHunterSpawn()
     {
-        bool leftSide = Random.Range(0, 2) == 0;
-        float x = leftSide ? -worldBorder.getSize().x / 2 : worldBorder.getSize().x / 2;
-        float y = Random.Range(0f, worldBorder.getSize().y) - worldBorder.getSize().y / 2;
-        var spawnPoint = new Vector2(x, y);
-        Quaternion rotation = Quaternion.Euler(0, 0, 0);
-        CubeHunter cubeHunter = Instantiate(cubeHunterFab, spawnPoint, rotation);
-        cubeHunter.worldBorder = worldBorder;
+        if (hunterSet.Count == 0)
+        {
+            bool leftSide = Random.Range(0, 2) == 0;
+            float x = leftSide ? -worldBorder.getSize().x / 2 : worldBorder.getSize().x / 2;
+            float y = Random.Range(0f, worldBorder.getSize().y) - worldBorder.getSize().y / 2;
+            var spawnPoint = new Vector2(x, y);
+            Quaternion rotation = Quaternion.Euler(0, 0, 0);
+            CubeHunter cubeHunter = Instantiate(cubeHunterFab, spawnPoint, rotation);
+            cubeHunter.worldBorder = worldBorder;
+            asteroidSet.Add(cubeHunter.gameObject);
+            hunterSet.Add(cubeHunter.gameObject);
+        }
     }
 
 
@@ -136,7 +154,7 @@ public class GameManager : MonoBehaviour
             float y = Random.Range(0f, worldBorder.getSize().y) - worldBorder.getSize().y / 2;
             activeSaucer = Instantiate(bigSaucerPreFab, new Vector2(x, y), Quaternion.Euler(0, 0, 0));
             activeSaucer.worldBorder = worldBorder;
-            activeSaucer.setAsteroids(asteroidSet);
+            activeSaucer.setTargets(asteroidSet);
             if (level > 0 && saucerCount % 3 == 0)
             {
                 activeSaucer.setSmall();
@@ -169,7 +187,7 @@ public class GameManager : MonoBehaviour
         }
         else if (now - hunterTimestamp > getHunterSpawnTime(level))
         {
-            SpawnCubeHunter();
+            AttemptCubeHunterSpawn();
             hunterTimestamp = now;
         }
 

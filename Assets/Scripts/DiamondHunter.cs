@@ -26,7 +26,6 @@ public class DiamondHunter : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         OnDestroyed?.Invoke(this);
-
         Destroy(this.gameObject);
     }
 
