@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour
     public static event LevelStartEvent OnLevelStart;
     public delegate void LevelEndEvent(int level);
     public static event LevelEndEvent OnLevelEnd;
+    public Player player;
     public WorldBorder worldBorder;
     public Explosion explosionPreFab;
     public Asteroid asteroidPreFab;
@@ -18,13 +19,17 @@ public class GameManager : MonoBehaviour
     private HashSet<GameObject> asteroidSet = new HashSet<GameObject>();
     private HashSet<GameObject> hunterSet = new HashSet<GameObject>();
     private BigSaucer activeSaucer;
+    private bool isPlayerDead = true;
+    public int lives = 5;
     int level;
     int saucerCount;
     float saucerTimestamp;
     float hunterTimestamp;
+    float playerDeathTimestamp;
 
     void Awake()
     {
+        lives = 5;
         level = 0;
         saucerTimestamp = Time.time;
         hunterTimestamp = Time.time;
@@ -37,6 +42,14 @@ public class GameManager : MonoBehaviour
         CubeHunter.OnDestroyed += OnCubeHunterDestruction;
         DiamondHunter.OnDestroyed += OnDiamondHunterDestruction;
         Hunter.OnDestroyed += OnHunterDestruction;
+        Player.OnDestroyed += OnPlayerDeath;
+    }
+
+    private void OnPlayerDeath(Player player)
+    {
+        SpawnExplosion(player.transform);
+        isPlayerDead = true;
+        playerDeathTimestamp = Time.time;
     }
 
     void SpawnExplosion(Transform transform)
@@ -90,13 +103,12 @@ public class GameManager : MonoBehaviour
         asteroidSet.Remove(cubeHunter.gameObject);
         hunterSet.Remove(cubeHunter.gameObject);
         SpawnExplosion(cubeHunter.transform);
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
         float x = cubeHunter.transform.position.x;
         float y = cubeHunter.transform.position.y;
 
-        SpawnDiamondHunter(x+.415f, y, -3, player);
-        SpawnDiamondHunter(x+.05f, y+.3f, 125, player);
-        SpawnDiamondHunter(x-.05f, y-.3f, -130, player);        
+        SpawnDiamondHunter(x+.415f, y, -3, player.gameObject);
+        SpawnDiamondHunter(x+.05f, y+.3f, 125, player.gameObject);
+        SpawnDiamondHunter(x-.05f, y-.3f, -130, player.gameObject);        
     }
 
     private void OnDiamondHunterDestruction(DiamondHunter diamondHunter)
@@ -173,6 +185,16 @@ public class GameManager : MonoBehaviour
    
     void Update()
     {
+        var now = Time.time;
+
+        if (isPlayerDead && lives > 0 && now - playerDeathTimestamp > 3f)
+        {
+            lives--;
+            isPlayerDead = false;
+            player.transform.position = Vector2.zero;
+            player.gameObject.SetActive(true);
+        }
+
         if (asteroidSet.Count == 0)
         {
             level++;
@@ -188,7 +210,6 @@ public class GameManager : MonoBehaviour
             OnLevelStart?.Invoke(level);
         }
 
-        var now = Time.time;
         if (now - saucerTimestamp > getSaucerSpawnTime(level))
         {
             AttemptBigSaucerSpawn();

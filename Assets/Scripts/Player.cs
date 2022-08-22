@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    public delegate void PlayerDestructionEvent(Player player);
+    public static event PlayerDestructionEvent OnDestroyed;
     public WorldBorder worldBorder;
     public Bullet bulletPreFab;
     public float thrustScaler = 4.0f;
@@ -17,6 +19,14 @@ public class Player : MonoBehaviour
     {
         this.rigidBody = GetComponent<Rigidbody2D>();
         GetComponent<AudioSource>().loop = true;
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        OnDestroyed?.Invoke(this);
+        this.gameObject.SetActive(false);
+        this.gameObject.transform.position = Vector2.zero;
+       
     }
 
     // Update is called once per frame

@@ -41,7 +41,7 @@ public class Hunter : MonoBehaviour
             this.transform.position = worldBorder.CalculateWrappedPosition(this.transform.position);
         }
 
-        if (target != null)
+        if (target.activeSelf)
         {
             Vector2 direction = (Vector2)target.transform.position - rigidBody.position;
             direction.Normalize();

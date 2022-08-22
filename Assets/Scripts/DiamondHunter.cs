@@ -41,11 +41,13 @@ public class DiamondHunter : MonoBehaviour
             this.transform.position = worldBorder.CalculateWrappedPosition(this.transform.position);
         }
 
-        Vector2 direction = (Vector2)target.transform.position - rigidBody.position;
-        direction.Normalize();
-        float rotateAmount = Vector3.Cross(transform.up, direction).z;
-        rigidBody.angularVelocity = rotateAmount * rotateSpeed;
-        rigidBody.velocity = transform.up * speed;
-
+        if (target.activeSelf)
+        {
+            Vector2 direction = (Vector2)target.transform.position - rigidBody.position;
+            direction.Normalize();
+            float rotateAmount = Vector3.Cross(transform.up, direction).z;
+            rigidBody.angularVelocity = rotateAmount * rotateSpeed;
+            rigidBody.velocity = transform.up * speed;
+        }
     }
 }
