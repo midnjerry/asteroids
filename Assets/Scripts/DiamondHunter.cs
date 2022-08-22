@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
-[RequireComponent(typeof(BoxCollider2D))]
+[RequireComponent(typeof(Collider2D))]
 public class DiamondHunter : MonoBehaviour
 {
     public delegate void DiamondHunterDestructionEvent(DiamondHunter hunter);

@@ -9,11 +9,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2327285791391642898}
-  - component: {fileID: 2327285791391642899}
   - component: {fileID: 2327285791391642908}
   - component: {fileID: 2327285791391642909}
   - component: {fileID: -8308928659602598094}
   - component: {fileID: -7958773623706202108}
+  - component: {fileID: -6453155694719355963}
   m_Layer: 7
   m_Name: BigSaucer
   m_TagString: Untagged
@@ -36,32 +36,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &2327285791391642899
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2327285791391642910}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.8, y: 0.6}
-    newSize: {x: 0.8, y: 0.6}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
 --- !u!50 &2327285791391642908
 Rigidbody2D:
   serializedVersion: 4
@@ -95,7 +69,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: bcf0b99c7cba85f48af65c035c12f46b, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.52
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -247,4 +221,40 @@ MonoBehaviour:
   enemyBulletPreFab: {fileID: -4864762766552593413, guid: d4eb20ed1d99ab2439f885f8f32debd6, type: 3}
   firingRate: 1
   turnRate: 3
-  isBig: 1
+--- !u!60 &-6453155694719355963
+PolygonCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2327285791391642910}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 0.8, y: 0.6}
+    newSize: {x: 0.8, y: 0.6}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Points:
+    m_Paths:
+    - - {x: 0.4006501, y: -0.07115413}
+      - {x: 0.17711245, y: 0.078722715}
+      - {x: 0.13566868, y: 0.24267463}
+      - {x: -0.14144377, y: 0.24123088}
+      - {x: -0.17422488, y: 0.074391395}
+      - {x: -0.39646015, y: -0.0703657}
+      - {x: -0.39711243, y: -0.12507641}
+      - {x: -0.17332694, y: -0.27849612}
+      - {x: -0.13621451, y: -0.2780704}
+      - {x: 0.17562228, y: -0.2794077}
+      - {x: 0.39711243, y: -0.12411845}
+      - {x: 0.4003783, y: -0.12652019}

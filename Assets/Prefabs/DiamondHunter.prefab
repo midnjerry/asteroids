@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 5662198484304903104}
   - component: {fileID: 5662198484304903105}
   - component: {fileID: 5325696632020313756}
-  - component: {fileID: -772292378128431677}
   - component: {fileID: -4349398707339666422}
+  - component: {fileID: 5134691832120415019}
   m_Layer: 6
   m_Name: DiamondHunter
   m_TagString: Untagged
@@ -108,8 +108,21 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!61 &-772292378128431677
-BoxCollider2D:
+--- !u!114 &-4349398707339666422
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5662198484304903134}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88e578b7b093f4044b2444a87f4b4bb2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  worldBorder: {fileID: 0}
+--- !u!60 &5134691832120415019
+PolygonCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -131,19 +144,13 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 0.64, y: 1.26}
-  m_EdgeRadius: 0
---- !u!114 &-4349398707339666422
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5662198484304903134}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 88e578b7b093f4044b2444a87f4b4bb2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  worldBorder: {fileID: 0}
+  m_Points:
+    m_Paths:
+    - - {x: -0.013635531, y: 0.63}
+      - {x: -0.32303038, y: 0.022724375}
+      - {x: -0.32303038, y: -0.009392563}
+      - {x: -0.012422927, y: -0.63}
+      - {x: 0.011210315, y: -0.63}
+      - {x: 0.32, y: -0.01727108}
+      - {x: 0.32, y: 0.011511773}
+      - {x: 0.01272665, y: 0.63}
