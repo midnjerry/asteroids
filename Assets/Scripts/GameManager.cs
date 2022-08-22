@@ -8,8 +8,8 @@ public class GameManager : MonoBehaviour
     public static event LevelStartEvent OnLevelStart;
     public delegate void LevelEndEvent(int level);
     public static event LevelEndEvent OnLevelEnd;
-
     public WorldBorder worldBorder;
+    public Explosion explosionPreFab;
     public Asteroid asteroidPreFab;
     public BigSaucer bigSaucerPreFab;
     public CubeHunter cubeHunterFab;
@@ -39,6 +39,11 @@ public class GameManager : MonoBehaviour
         Hunter.OnDestroyed += OnHunterDestruction;
     }
 
+    void SpawnExplosion(Transform transform)
+    {
+        Instantiate(explosionPreFab, transform.position, Quaternion.identity);
+    }
+
     void SpawnAsteroid(float size)
     {
         float width = worldBorder.getSize().x;
@@ -62,6 +67,7 @@ public class GameManager : MonoBehaviour
     private void OnAsteroidDestruction(Asteroid asteroid)
     {
         asteroidSet.Remove(asteroid.gameObject);
+        SpawnExplosion(asteroid.transform);
         if (asteroid.getSize() == Asteroid.LARGE)
         {
             SpawnAsteroid(Asteroid.MEDIUM, asteroid.transform.position);
@@ -75,6 +81,7 @@ public class GameManager : MonoBehaviour
 
     private void OnBigSaucerDestruction(BigSaucer saucer)
     {
+        SpawnExplosion(saucer.transform);
         activeSaucer = null;
     }
 
@@ -82,6 +89,7 @@ public class GameManager : MonoBehaviour
     {
         asteroidSet.Remove(cubeHunter.gameObject);
         hunterSet.Remove(cubeHunter.gameObject);
+        SpawnExplosion(cubeHunter.transform);
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         float x = cubeHunter.transform.position.x;
         float y = cubeHunter.transform.position.y;
@@ -93,6 +101,7 @@ public class GameManager : MonoBehaviour
 
     private void OnDiamondHunterDestruction(DiamondHunter diamondHunter)
     {
+        SpawnExplosion(diamondHunter.transform);
         hunterSet.Remove(diamondHunter.gameObject);
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         var top = diamondHunter.transform.position + (diamondHunter.transform.up * .3f);
@@ -104,6 +113,7 @@ public class GameManager : MonoBehaviour
 
     private void OnHunterDestruction(Hunter hunter)
     {
+        SpawnExplosion(hunter.transform);
         hunterSet.Remove(hunter.gameObject);
     }
 
