@@ -9,7 +9,16 @@ This is a port of the Asteroids Deluxe arcade game using Unity 2D engine.  Great
 * Enemy Ship Movement
 * UI
 
-## How To Play
+## How To Install
 1. Clone this project
 2. Open project with Unity
 3. Run from Unity (Double-click asteroids scene - then click on Play button)
+
+## How To Play
+**W** - THRUST
+
+**A** - TURN LEFT
+
+**D** - TURN RIGHT
+
+**SPACE** - SHOOT
