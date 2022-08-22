@@ -4,13 +4,6 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    // 1 diamond 3 big level 1
-    // 3 diamond 3 big?
-    // Looks like level 1 spawn rate is 10s
-    // decrements by one per level until 3s spawn rate
-    // speed increases by a little bit per level
-
-
     public delegate void LevelStartEvent(int level);
     public static event LevelStartEvent OnLevelStart;
     public delegate void LevelEndEvent(int level);
@@ -23,13 +16,18 @@ public class GameManager : MonoBehaviour
     public DiamondHunter diamondHunterPreFab;
     public Hunter hunterPreFab;
     private HashSet<Asteroid> asteroidSet = new HashSet<Asteroid>();
-    private BigSaucer activeBigSaucer;
+    private HashSet<GameObject> hunterSet = new HashSet<GameObject>();
+    private BigSaucer activeSaucer;
     int level;
     int saucerCount;
+    float saucerTimestamp;
+    float hunterTimestamp;
 
     void Awake()
     {
         level = 0;
+        saucerTimestamp = Time.time;
+        hunterTimestamp = Time.time;
     }
 
     private void Start()
@@ -40,15 +38,17 @@ public class GameManager : MonoBehaviour
         DiamondHunter.OnDestroyed += OnDiamondHunterDestruction;
     }
 
-    void Spawn(float size)
+    void SpawnAsteroid(float size)
     {
-        float x = Random.Range(0f, worldBorder.getSize().x) - worldBorder.getSize().x / 2;
-        float y = Random.Range(0f, worldBorder.getSize().y) - worldBorder.getSize().y / 2;
-
-        Spawn(size, new Vector2(x, y));
+        float width = worldBorder.getSize().x;
+        float height = worldBorder.getSize().y;
+        float randomNeg = Random.Range(0, 2) == 0 ? -1 : 1;
+        float x = Random.Range(width * .8f, width) / 2 * randomNeg;
+        float y = Random.Range(height * .8f, height) / 2 * randomNeg;
+        SpawnAsteroid(size, new Vector2(x, y));
     }
 
-    void Spawn(float size, Vector2 spawnPoint)
+    void SpawnAsteroid(float size, Vector2 spawnPoint)
     {
         float angle = Random.Range(0.0f, 360.0f);
         Quaternion rotation = Quaternion.Euler(0, 0, angle);
@@ -63,23 +63,18 @@ public class GameManager : MonoBehaviour
         asteroidSet.Remove(asteroid);
         if (asteroid.getSize() == Asteroid.LARGE)
         {
-            Spawn(Asteroid.MEDIUM, asteroid.transform.position);
-            Spawn(Asteroid.MEDIUM, asteroid.transform.position);
-            AttemptBigSaucerSpawn();
-            AttemptCubeHunterSpawn();
+            SpawnAsteroid(Asteroid.MEDIUM, asteroid.transform.position);
+            SpawnAsteroid(Asteroid.MEDIUM, asteroid.transform.position);
         } else if (asteroid.getSize() == Asteroid.MEDIUM)
         {
-            Spawn(Asteroid.SMALL, asteroid.transform.position);
-            Spawn(Asteroid.SMALL, asteroid.transform.position);
-            AttemptBigSaucerSpawn();
-            AttemptCubeHunterSpawn();
-
+            SpawnAsteroid(Asteroid.SMALL, asteroid.transform.position);
+            SpawnAsteroid(Asteroid.SMALL, asteroid.transform.position);
         }
     }
 
     private void OnBigSaucerDestruction(BigSaucer saucer)
     {
-        activeBigSaucer = null;
+        activeSaucer = null;
     }
 
     private void OnCubeHunterDestruction(CubeHunter cubeHunter)
@@ -119,9 +114,10 @@ public class GameManager : MonoBehaviour
         diamondHunter.setTarget(target);
     }
 
-    void AttemptCubeHunterSpawn()
+    void SpawnCubeHunter()
     {
-        float x = Random.Range(0f, worldBorder.getSize().x) - worldBorder.getSize().x / 2;
+        bool leftSide = Random.Range(0, 2) == 0;
+        float x = leftSide ? -worldBorder.getSize().x / 2 : worldBorder.getSize().x / 2;
         float y = Random.Range(0f, worldBorder.getSize().y) - worldBorder.getSize().y / 2;
         var spawnPoint = new Vector2(x, y);
         Quaternion rotation = Quaternion.Euler(0, 0, 0);
@@ -132,18 +128,18 @@ public class GameManager : MonoBehaviour
 
     void AttemptBigSaucerSpawn()
     {
-        if (activeBigSaucer == null)
+        if (activeSaucer == null)
         {
             saucerCount++;
             bool leftSide = Random.Range(0, 2) == 0;
             float x = leftSide ? -worldBorder.getSize().x / 2 : worldBorder.getSize().x / 2;
             float y = Random.Range(0f, worldBorder.getSize().y) - worldBorder.getSize().y / 2;
-            activeBigSaucer = Instantiate(bigSaucerPreFab, new Vector2(x, y), Quaternion.Euler(0, 0, 0));
-            activeBigSaucer.worldBorder = worldBorder;
-            activeBigSaucer.setAsteroids(asteroidSet);
+            activeSaucer = Instantiate(bigSaucerPreFab, new Vector2(x, y), Quaternion.Euler(0, 0, 0));
+            activeSaucer.worldBorder = worldBorder;
+            activeSaucer.setAsteroids(asteroidSet);
             if (level > 0 && saucerCount % 3 == 0)
             {
-                activeBigSaucer.setSmall();
+                activeSaucer.setSmall();
             }
         }
     }
@@ -152,20 +148,31 @@ public class GameManager : MonoBehaviour
     {
         if (asteroidSet.Count == 0)
         {
-            if (level >= 1)
+            level++;
+            if (level > 1)
             {
                 OnLevelEnd?.Invoke(level);
             }
-            level++;
-            int count = getAsteroidCount();
+            int count = getAsteroidCount(level);
             for (int i = 0; i < count; i++)
             {
-                Spawn(Asteroid.LARGE);
+                SpawnAsteroid(Asteroid.LARGE);
             }
-            AttemptBigSaucerSpawn();
-            AttemptCubeHunterSpawn();
             OnLevelStart?.Invoke(level);
         }
+
+        var now = Time.time;
+        if (now - saucerTimestamp > getSaucerSpawnTime(level))
+        {
+            AttemptBigSaucerSpawn();
+            saucerTimestamp = now;
+        }
+        else if (now - hunterTimestamp > getHunterSpawnTime(level))
+        {
+            SpawnCubeHunter();
+            hunterTimestamp = now;
+        }
+
     }
 
     private void OnDestroy()
@@ -173,13 +180,18 @@ public class GameManager : MonoBehaviour
         Asteroid.OnDestroyed -= OnAsteroidDestruction;
     }
 
-    private int getAsteroidCount()
+    private int getAsteroidCount(int level)
     {
-        if (level <= 1) return 4;
-        if (level <= 2) return 5;
-        if (level <= 4) return 6;
-        if (level <= 5) return 7;
-        if (level <= 6) return 8;
-        return 9;
+        return Mathf.Min(level + 3, 9);
+    }
+
+    private float getSaucerSpawnTime(int level)
+    {
+        return Mathf.Max(11 - level, 3);
+    }
+
+    private float getHunterSpawnTime(int level)
+    {
+        return Mathf.Max(11 - level, 3);
     }
 }
