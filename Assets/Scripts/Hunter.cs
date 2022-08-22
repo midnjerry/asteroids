@@ -48,6 +48,9 @@ public class Hunter : MonoBehaviour
             float rotateAmount = Vector3.Cross(transform.up, direction).z;
             rigidBody.angularVelocity = rotateAmount * rotateSpeed;
             rigidBody.velocity = transform.up * speed;
+        } else
+        {
+            rigidBody.angularVelocity = 0;
         }
     }
 }

@@ -8,21 +8,25 @@ public class GameManager : MonoBehaviour
     public static event LevelStartEvent OnLevelStart;
     public delegate void LevelEndEvent(int level);
     public static event LevelEndEvent OnLevelEnd;
+    public Dashboard dashboard;
     public Player player;
     public WorldBorder worldBorder;
     public Explosion explosionPreFab;
     public Asteroid asteroidPreFab;
-    public BigSaucer bigSaucerPreFab;
+    public Saucer bigSaucerPreFab;
     public CubeHunter cubeHunterFab;
     public DiamondHunter diamondHunterPreFab;
     public Hunter hunterPreFab;
     private HashSet<GameObject> asteroidSet = new HashSet<GameObject>();
     private HashSet<GameObject> hunterSet = new HashSet<GameObject>();
-    private BigSaucer activeSaucer;
+    private Saucer activeSaucer;
     private bool isPlayerDead = true;
     public int lives = 5;
     int level;
     int saucerCount;
+    int score = 0;
+    int goal = 10000;
+    int goalIncrement = 10000;
     float saucerTimestamp;
     float hunterTimestamp;
     float playerDeathTimestamp;
@@ -33,16 +37,18 @@ public class GameManager : MonoBehaviour
         level = 0;
         saucerTimestamp = Time.time;
         hunterTimestamp = Time.time;
+        playerDeathTimestamp = 0f;
     }
 
     private void Start()
     {
         Asteroid.OnDestroyed += OnAsteroidDestruction;
-        BigSaucer.OnDestroyed += OnBigSaucerDestruction;
+        Saucer.OnDestroyed += OnSaucerDestruction;
         CubeHunter.OnDestroyed += OnCubeHunterDestruction;
         DiamondHunter.OnDestroyed += OnDiamondHunterDestruction;
         Hunter.OnDestroyed += OnHunterDestruction;
         Player.OnDestroyed += OnPlayerDeath;
+        dashboard.setGameOver(false);
     }
 
     private void OnPlayerDeath(Player player)
@@ -50,6 +56,10 @@ public class GameManager : MonoBehaviour
         SpawnExplosion(player.transform);
         isPlayerDead = true;
         playerDeathTimestamp = Time.time;
+        if (lives == 0)
+        {
+            dashboard.setGameOver(true);
+        }
     }
 
     void SpawnExplosion(Transform transform)
@@ -83,19 +93,50 @@ public class GameManager : MonoBehaviour
         SpawnExplosion(asteroid.transform);
         if (asteroid.getSize() == Asteroid.LARGE)
         {
+            updateScore(20);
             SpawnAsteroid(Asteroid.MEDIUM, asteroid.transform.position);
             SpawnAsteroid(Asteroid.MEDIUM, asteroid.transform.position);
         } else if (asteroid.getSize() == Asteroid.MEDIUM)
         {
+            updateScore(50);
             SpawnAsteroid(Asteroid.SMALL, asteroid.transform.position);
             SpawnAsteroid(Asteroid.SMALL, asteroid.transform.position);
+        } else
+        {
+            updateScore(100);
         }
     }
 
-    private void OnBigSaucerDestruction(BigSaucer saucer)
+    private void updateScore(int points)
+    {
+        if (player.gameObject.activeSelf)
+        {
+            score += points;
+            dashboard.updateScore(score);
+
+            if (score > goal)
+            {
+                goal += goalIncrement;
+                dashboard.updateGoal(goal);
+                lives++;
+                dashboard.updateLives(lives);
+            }
+        }
+    }
+
+
+    private void OnSaucerDestruction(Saucer saucer)
     {
         SpawnExplosion(saucer.transform);
         activeSaucer = null;
+        if (saucer.isSmall())
+        {
+            updateScore(1000);
+        }
+        else
+        {
+            updateScore(200);
+        }
     }
 
     private void OnCubeHunterDestruction(CubeHunter cubeHunter)
@@ -108,7 +149,8 @@ public class GameManager : MonoBehaviour
 
         SpawnDiamondHunter(x+.415f, y, -3, player.gameObject);
         SpawnDiamondHunter(x+.05f, y+.3f, 125, player.gameObject);
-        SpawnDiamondHunter(x-.05f, y-.3f, -130, player.gameObject);        
+        SpawnDiamondHunter(x-.05f, y-.3f, -130, player.gameObject);
+        updateScore(50);
     }
 
     private void OnDiamondHunterDestruction(DiamondHunter diamondHunter)
@@ -121,12 +163,14 @@ public class GameManager : MonoBehaviour
         var bottomRotation = diamondHunter.transform.rotation * Quaternion.Euler(0, 0, 180f);
         SpawnHunter(top.x, top.y, diamondHunter.transform.rotation, player);
         SpawnHunter(bottom.x, bottom.y, bottomRotation, player);
+        updateScore(100);
     }
 
     private void OnHunterDestruction(Hunter hunter)
     {
         SpawnExplosion(hunter.transform);
         hunterSet.Remove(hunter.gameObject);
+        updateScore(200);
     }
 
     void SpawnHunter(float x, float y, Quaternion rotation, GameObject target)
@@ -165,7 +209,7 @@ public class GameManager : MonoBehaviour
     }
 
 
-    void AttemptBigSaucerSpawn()
+    void AttemptSaucerSpawn()
     {
         if (activeSaucer == null)
         {
@@ -176,9 +220,12 @@ public class GameManager : MonoBehaviour
             activeSaucer = Instantiate(bigSaucerPreFab, new Vector2(x, y), Quaternion.Euler(0, 0, 0));
             activeSaucer.worldBorder = worldBorder;
             activeSaucer.setTargets(asteroidSet);
-            if (level > 0 && saucerCount % 3 == 0)
+            if (score > 10000 && saucerCount % 3 == 0)
             {
-                activeSaucer.setSmall();
+                activeSaucer.setSize(Saucer.SMALL);
+            } else
+            {
+                activeSaucer.setSize(Saucer.BIG);
             }
         }
     }
@@ -187,12 +234,14 @@ public class GameManager : MonoBehaviour
     {
         var now = Time.time;
 
-        if (isPlayerDead && lives > 0 && now - playerDeathTimestamp > 3f)
+        if (canPlayerSpawn())
         {
             lives--;
             isPlayerDead = false;
             player.transform.position = Vector2.zero;
             player.gameObject.SetActive(true);
+            OnLevelStart?.Invoke(level);
+            dashboard.updateLives(lives);
         }
 
         if (asteroidSet.Count == 0)
@@ -212,7 +261,7 @@ public class GameManager : MonoBehaviour
 
         if (now - saucerTimestamp > getSaucerSpawnTime(level))
         {
-            AttemptBigSaucerSpawn();
+            AttemptSaucerSpawn();
             saucerTimestamp = now;
         }
         else if (now - hunterTimestamp > getHunterSpawnTime(level))
@@ -221,6 +270,12 @@ public class GameManager : MonoBehaviour
             hunterTimestamp = now;
         }
 
+    }
+
+    private bool canPlayerSpawn()
+    {
+        var now = Time.time;
+        return isPlayerDead && lives > 0 && (now - playerDeathTimestamp > 3f || now < 3f);
     }
 
     private void OnDestroy()

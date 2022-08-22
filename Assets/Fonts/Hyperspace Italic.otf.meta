@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 100604fb5e5f5aa4dab94beea4545b6d
+guid: 2a3976d5c2df6c648980cbf8220e382b
 TrueTypeFontImporter:
   externalObjects: {}
   serializedVersion: 4
@@ -10,7 +10,9 @@ TrueTypeFontImporter:
   includeFontData: 1
   fontNames:
   - Hyperspace
-  fallbackFontReferences: []
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 987fffeeeb564cc4597efab20aef07f2, type: 3}
+  - {fileID: 12800000, guid: b4607efaf0a93ec4fbcf1e04e1e3b277, type: 3}
   customCharacters: 
   fontRenderingMode: 0
   ascentCalculationMode: 1

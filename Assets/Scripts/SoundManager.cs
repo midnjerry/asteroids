@@ -25,10 +25,11 @@ public class SoundManager : MonoBehaviour
         Asteroid.OnDestroyed += OnAsteroidDestruction;
         GameManager.OnLevelStart += OnLevelStart;
         GameManager.OnLevelEnd += OnLevelEnd;
-        BigSaucer.OnDestroyed += OnBigSaucerDestroyed;
+        Saucer.OnDestroyed += OnBigSaucerDestroyed;
         CubeHunter.OnDestroyed += OnCubeHunterDestroyed;
         DiamondHunter.OnDestroyed += OnDiamondHunterDestruction;
         Hunter.OnDestroyed += OnHunterDestruction;
+        Player.OnDestroyed += OnPlayerDeath;
     }
 
     private void OnHunterDestruction(Hunter hunter)
@@ -46,14 +47,14 @@ public class SoundManager : MonoBehaviour
         audioSource.PlayOneShot(largeExplosion);
     }
 
-    private void OnBigSaucerDestroyed(BigSaucer saucer)
+    private void OnBigSaucerDestroyed(Saucer saucer)
     {
         audioSource.PlayOneShot(largeExplosion);
     }
 
     private void OnDestroy()
     {
-        BigSaucer.OnDestroyed -= OnBigSaucerDestroyed;
+        Saucer.OnDestroyed -= OnBigSaucerDestroyed;
         Asteroid.OnDestroyed -= OnAsteroidDestruction;
         GameManager.OnLevelStart -= OnLevelStart;
         GameManager.OnLevelEnd -= OnLevelEnd;
@@ -102,6 +103,11 @@ public class SoundManager : MonoBehaviour
     }
 
     void OnLevelEnd(int level)
+    {
+        isPlaying = false;
+    }
+
+    void OnPlayerDeath(Player player)
     {
         isPlaying = false;
     }

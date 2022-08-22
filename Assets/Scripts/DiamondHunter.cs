@@ -49,5 +49,9 @@ public class DiamondHunter : MonoBehaviour
             rigidBody.angularVelocity = rotateAmount * rotateSpeed;
             rigidBody.velocity = transform.up * speed;
         }
+        else
+        {
+            rigidBody.angularVelocity = 0;
+        }
     }
 }

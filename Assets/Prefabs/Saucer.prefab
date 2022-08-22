@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: -7958773623706202108}
   - component: {fileID: -6453155694719355963}
   m_Layer: 7
-  m_Name: BigSaucer
+  m_Name: Saucer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

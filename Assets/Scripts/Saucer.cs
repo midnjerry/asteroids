@@ -3,15 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class BigSaucer : MonoBehaviour
+public class Saucer : MonoBehaviour
 {
-    public delegate void BigSaucerDestructionEvent(BigSaucer saucer);
-    public static event BigSaucerDestructionEvent OnDestroyed;
-    private SpriteRenderer spriteRenderer;
+    public static float BIG = 1.5F;
+    public static float SMALL = .7f;
+    public delegate void SaucerDestructionEvent(Saucer saucer);
+    public static event SaucerDestructionEvent OnDestroyed;
     private Rigidbody2D rigidBody;
     public WorldBorder worldBorder;
     public EnemyBullet enemyBulletPreFab;
     private HashSet<GameObject> targets;
+    private float size = BIG;
     private float lastShotTime;
     private float lastTurnTime;
     public float firingRate = 1f;
@@ -19,7 +21,6 @@ public class BigSaucer : MonoBehaviour
 
     private void Awake()
     {
-        spriteRenderer = GetComponent<SpriteRenderer>();
         rigidBody = GetComponent<Rigidbody2D>();
     }
 
@@ -51,9 +52,15 @@ public class BigSaucer : MonoBehaviour
         }
     }
 
-    public void setSmall()
+    public bool isSmall()
     {
-        this.transform.localScale = new Vector2(.7f, .7f);
+        return size <= SMALL;
+    }
+
+    public void setSize(float size)
+    {
+        this.size = size;
+        this.transform.localScale = new Vector2(size, size);
     }
 
     void attemptShot()
